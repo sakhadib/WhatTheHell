@@ -297,4 +297,9 @@ You now have:
 **Production Ready** 🚀  
 **Sustainable & Maintainable** 💪
 
+---
+
+**Author**: sakhadib (https://github.com/sakhadib)  
+**Repository**: https://github.com/sakhadib/WhatTheHell
+
 Enjoy your new error translator! 🎯

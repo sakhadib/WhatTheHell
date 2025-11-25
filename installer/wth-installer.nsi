@@ -4,8 +4,8 @@
 
 !define PRODUCT_NAME "WTH (What The Hell)"
 !define PRODUCT_VERSION "1.0.0"
-!define PRODUCT_PUBLISHER "WTH Project"
-!define PRODUCT_WEB_SITE "https://github.com/yourusername/wth"
+!define PRODUCT_PUBLISHER "sakhadib"
+!define PRODUCT_WEB_SITE "https://github.com/sakhadib/WhatTheHell"
 
 ; Includes
 !include "MUI2.nsh"

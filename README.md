@@ -90,8 +90,8 @@ wth
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/wth.git
-cd wth
+git clone https://github.com/sakhadib/WhatTheHell.git
+cd WhatTheHell
 
 # Create build directory
 mkdir build && cd build
@@ -156,7 +156,8 @@ wth/
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request to:
+https://github.com/sakhadib/WhatTheHell
 
 ## License
 
@@ -171,5 +172,7 @@ MIT License - see LICENSE file for details
 - [ ] More error pattern libraries
 
 ## Author
+
+**sakhadib** - [GitHub](https://github.com/sakhadib)
 
 Built with frustration and determination.

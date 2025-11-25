@@ -314,7 +314,7 @@ If you want to understand the code better:
 
 To contribute:
 
-1. Fork the repository
+1. Fork the repository: https://github.com/sakhadib/WhatTheHell
 2. Add your error patterns or features
 3. Test on multiple platforms
 4. Submit a pull request
@@ -322,6 +322,12 @@ To contribute:
 ## 📄 License
 
 MIT License - See LICENSE file
+
+## 👤 Author
+
+**sakhadib** - https://github.com/sakhadib
+
+Repository: https://github.com/sakhadib/WhatTheHell
 
 ---
 
