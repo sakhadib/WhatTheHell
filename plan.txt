@@ -1,0 +1,138 @@
+Product Requirements Document: "wth" (What The Hell)
+
+Version: 1.0 (MVP)
+
+Type: Command Line Interface (CLI) Tool
+
+Tagline: Translating "Computer Error" to "Human Fix."
+
+1. Executive Summary
+
+The Problem: When developers encounter an error in the terminal, they are often bombarded with massive stack traces (20+ lines of noise). Finding the actual root cause requires scrolling, parsing cryptic error codes, and often copying/pasting into Google or ChatGPT.
+
+The Solution: wth is a post-execution command. When run immediately after a failed command, it captures the previous error output, filters out the noise, and prints one single sentence explaining the issue and suggesting a fix.
+
+Core Philosophy: "One error, one sentence."
+
+2. User Stories
+
+The Junior Dev: I try to run a Python script, but it explodes with an ImportError. The stack trace is scary. I type wth, and it tells me: "You are missing the 'pandas' library; run pip install pandas."
+
+The Tired Senior: I am deploying to a server and get a permission error buried in a 100-line build log. I type wth, and it says: "The script tried to write to /var/www but lacked permissions; try running with sudo."
+
+3. Functional Requirements
+
+3.1. Input Mechanism
+
+The tool acts on the Standard Error (stderr) or Standard Output (stdout) of the immediately preceding command.
+
+Command: User types wth in the terminal.
+
+Data Source: wth must access the shell's history or buffer to retrieve the output of the command history[-1].
+
+3.2. Processing Logic (The "Translation" Engine)
+
+The tool acts as a filter. It does NOT hallucinate code. It parses text.
+
+Step 1 (Capture): Grab the last N lines (e.g., 50 lines) of terminal output.
+
+Step 2 (Identify): Locate the specific Error Line (e.g., lines starting with Error:, Exception:, Fatal:, or non-zero exit codes).
+
+Step 3 (Simplify):
+
+Regex Mode (Local): Match against common patterns (Python tracebacks, Node.js ReferenceErrors, Git merge conflicts).
+
+LLM Mode (Optional/Cloud): Send the stripped error block to a lightweight LLM API (e.g., Gemini Flash) with the prompt: "Summarize this error in one sentence and provide the fix command."
+
+3.3. Output (The UI)
+
+Format: A single, bold line of text.
+
+Style: Plain English. No jargon unless necessary.
+
+Structure: [Explanation of what went wrong] + [Suggested Command]
+
+Example:
+
+User: python main.py -> Explosion of text
+User: wth
+Tool: You are trying to add a String to an Integer on line 42. convert the input using int() before adding.
+
+4. Technical Specifications
+
+4.1. Architecture
+
+Language: Rust or Go (for instant startup time and zero dependencies).
+
+Integration: Needs to work with common shells (Bash, Zsh, Fish, PowerShell).
+
+Buffer Access:
+
+Challenge: Standard commands cannot easily "read back" the terminal screen buffer due to OS security sandboxing.
+
+Solution A (The Wrapper): Users alias commands, e.g., alias run='... | tee /tmp/last_output'. (Too intrusive).
+
+Solution B (The Tmux/Screen approach): wth works best inside terminal multiplexers or by integrating with shell hooks (e.g., PROMPT_COMMAND in bash) to log exit codes and capturing the last output buffer.
+
+Solution C (The Selection): User highlights text -> runs wth. (Manual fallback).
+
+Selected MVP Approach: Shell Hook Integration. wth installs a small shell function that saves the output of the last failed command (exit code != 0) to a temp file ~/.wth_last_error. Typing wth reads this file.
+
+4.2. Pattern Matching Rules (Local Regex MVP)
+
+To keep it fast and offline-capable, the MVP will use a local dictionary of regex patterns for common languages.
+
+Python: /(.*)Error: (.*)/ -> Returns the error type and message.
+
+NodeJS: /ReferenceError: (.*) is not defined/ -> "Variable '$1' is missing."
+
+Git: /fatal: (.*)/ -> Returns the git error directly.
+
+Bash: /command not found: (.*)/ -> "You don't have '$1' installed."
+
+4.3. LLM Fallback (API)
+
+If regex fails to find a match:
+
+Send sanitized log (no secrets/env vars) to API.
+
+System Prompt: "You are a CLI tool. Return ONLY a JSON: {'explanation': '...', 'fix_command': '...'}. Keep explanation under 15 words."
+
+5. UI/UX Design Guidelines
+
+5.1. Tone
+
+Helpful but terse. Like a senior engineer looking over your shoulder.
+
+No polite conversation. (No "Hello!", No "I think..."). Just the facts.
+
+5.2. Visuals
+
+Use colors to separate the explanation from the code.
+
+Explanation: White/Bold.
+
+Fix Command: Green/Cyan (Monospaced).
+
+Example Output:
+
+> wth
+❌ Python module 'numpy' not found.
+👉 Try running: pip install numpy
+
+
+6. Edge Cases & Risks
+
+Privacy: Users might have API keys or passwords in their error logs.
+
+Mitigation: The "Shell Hook" must attempt to scrub strings looking like keys (e.g., sk-live-..., AWS_ACCESS_KEY) before saving to the temp file or sending to an LLM.
+
+False Positives: Sometimes a "Warning" looks like an error but didn't stop execution. wth should check the exit code ($?) first. If exit code is 0, it should say "Last command finished successfully."
+
+7. Future Scope
+
+wth --fix: Automatically runs the suggested command (Dangerous, requires confirmation).
+
+Language Packs: Download specific regex packs for Rust, C++, Java, etc.
+
+IDE Extension: A VS Code version that underlines the error in the integrated terminal.

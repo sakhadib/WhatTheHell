@@ -1,0 +1,78 @@
+# WTH (What The Hell) - Ready to Install
+
+**Translating "Computer Error" to "Human Fix"**
+
+## 🚀 Quick Install
+
+**Just double-click:** `WTH-Installer.bat`
+
+That's it! The installer will:
+1. Request admin privileges
+2. Install WTH to your system
+3. Add it to your PATH
+4. Set up automatic error capture
+
+## 📝 What You Get
+
+After installation, whenever a command fails:
+
+```powershell
+PS> python script.py
+# ... error spam ...
+
+PS> wth
+✗ Python module 'pandas' not found.
+→ Try: pip install pandas
+```
+
+## 💡 How to Use
+
+1. **Install**: Double-click `WTH-Installer.bat`
+2. **Restart PowerShell** (important!)
+3. Run a command that fails
+4. Type `wth` to see what went wrong
+
+## 🔧 Manual Install (Optional)
+
+If the batch file doesn't work:
+
+1. Right-click PowerShell → Run as Administrator
+2. Navigate to this folder
+3. Run: `.\install.ps1`
+
+## ❓ Help
+
+**"wth: command not found"**
+- Restart PowerShell completely
+
+**Still not working?**
+- Make sure you ran the installer as Administrator
+- Check if `C:\Program Files\wth\wth.exe` exists
+
+## 🗑️ Uninstall
+
+Run PowerShell as Admin:
+```powershell
+& "C:\Program Files\wth\scripts\wth-hook.ps1" -Uninstall
+```
+
+Or manually delete `C:\Program Files\wth` and remove the hook from your PowerShell profile.
+
+## 📦 What's Inside
+
+- `wth.exe` - The main program (~4MB)
+- `WTH-Installer.bat` - Double-click installer
+- `install.ps1` - PowerShell installer script
+- `README.md` - Full documentation
+
+## 🔒 Privacy
+
+All error analysis happens **locally** on your computer. No data is sent anywhere.
+
+Sensitive data (API keys, passwords) is automatically scrubbed before processing.
+
+---
+
+**Version**: 1.0.0  
+**License**: MIT  
+**Built with**: C++ for speed and reliability
